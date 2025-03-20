@@ -3,7 +3,7 @@
         "Author": "Allison",
         "Name": "Eden Hall Bingo",
         "InternalName": "EdenHallBingo",
-        "AssemblyVersion": "0.0.0.2",
+        "AssemblyVersion": "0.0.0.3",
         "Punchline": "Play bingo.",
         "Description": "Made for Eden Hall Venue. Open Wends/Sunday 10pm-2am EST.",
         "ApplicableVersion": "any",

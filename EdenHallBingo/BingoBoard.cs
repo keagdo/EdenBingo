@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
+using System.Numerics;
 using System.Text;
 public class BingoBoard
 {
@@ -17,18 +17,30 @@ public class BingoBoard
         GenerateBingoBoard();
     }
 
-        public static int GetStableHash(string input)
+    private int GetDeterministicHashCode(string str)
     {
-        using (var md5 = MD5.Create()) // Can use other stable hashes too
+        unchecked
         {
-            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-            return BitConverter.ToInt32(hash, 0); // Convert first 4 bytes to int
+            int hash1 = (5381 << 16) + 5381;
+            int hash2 = hash1;
+
+            for (int i = 0; i < str.Length; i += 2)
+            {
+                hash1 = ((hash1 << 5) + hash1) ^ str[i];
+                if (i == str.Length - 1)
+                    break;
+                hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+            }
+
+            return hash1 + (hash2 * 1566083941);
         }
     }
 
+
     private void GenerateBingoBoard()
     {
-        Random rng = new Random(GetStableHash(Code)); // Seed with code for consistency
+        var seed =  GetDeterministicHashCode(Code);       
+        Random rng = new Random(seed); // Seed with code for consistency
         
         Board = new int[25]; // 5x5 grid
         

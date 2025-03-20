@@ -320,37 +320,37 @@ public class AdminWindow : Window, IDisposable
         }
     }
 
-private void DrawBingoBoard(TabData tab)
-{
-    if (ImGui.BeginTabBar("BingoBoards"))
+    private void DrawBingoBoard(TabData tab)
     {
-        for (int i = 0; i < tab.Boards.Count; i++)
+        if (ImGui.BeginTabBar("BingoBoards"))
         {
-            string tabLabel = $"Board {i + 1}";
-            // bool isWinner = tab.Boards[i].isWinner;
-
-            // if (isWinner)
-            // {
-            //     ImGui.PushStyleColor(ImGuiCol.Tab, new Vector4(0.8f, 0.2f, 0.2f, 1.0f)); // Red for winners
-            //     ImGui.PushStyleColor(ImGuiCol.TabHovered, new Vector4(1.0f, 0.4f, 0.4f, 1.0f)); // Lighter red on hover
-            //     ImGui.PushStyleColor(ImGuiCol.TabActive, new Vector4(1.0f, 0.6f, 0.6f, 1.0f)); // Bright red when active
-            //     tab.hasWinner = true;
-            // }
-
-            if (ImGui.BeginTabItem(tabLabel))
+            for (int i = 0; i < tab.Boards.Count; i++)
             {
-                DrawSingleBingoBoard(tab.Boards[i]);
-                ImGui.EndTabItem();
-            }
+                string tabLabel = $"Board {i + 1}";
+                // bool isWinner = tab.Boards[i].isWinner;
 
-            // if (isWinner)
-            // {
-            //     ImGui.PopStyleColor(3); // Restore colors
-            // }
+                // if (isWinner)
+                // {
+                //     ImGui.PushStyleColor(ImGuiCol.Tab, new Vector4(0.8f, 0.2f, 0.2f, 1.0f)); // Red for winners
+                //     ImGui.PushStyleColor(ImGuiCol.TabHovered, new Vector4(1.0f, 0.4f, 0.4f, 1.0f)); // Lighter red on hover
+                //     ImGui.PushStyleColor(ImGuiCol.TabActive, new Vector4(1.0f, 0.6f, 0.6f, 1.0f)); // Bright red when active
+                //     tab.hasWinner = true;
+                // }
+
+                if (ImGui.BeginTabItem(tabLabel))
+                {
+                    DrawSingleBingoBoard(tab.Boards[i]);
+                    ImGui.EndTabItem();
+                }
+
+                // if (isWinner)
+                // {
+                //     ImGui.PopStyleColor(3); // Restore colors
+                // }
+            }
+            ImGui.EndTabBar();
         }
-        ImGui.EndTabBar();
     }
-}
 
     private void DrawSingleBingoBoard(BingoBoard board)
     {
