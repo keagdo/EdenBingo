@@ -1,0 +1,11 @@
+{
+  "Author": "Allison",
+  "Name": "Eden Hall Bingo",
+  "Punchline": "Play bingo.",
+  "Description": "Made for Eden Hall Venue. Open Wends/Sunday 10pm-2am EST.",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "Eden Hall",
+    "Bingo"
+  ]
+}
