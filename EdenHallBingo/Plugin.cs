@@ -34,7 +34,7 @@ public sealed class Plugin : IDalamudPlugin
         // var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
 
         ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this);
+        MainWindow = new MainWindow(this, Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "logo.png"));
         AdminWindow = new AdminWindow(this);
 
         WindowSystem.AddWindow(ConfigWindow);

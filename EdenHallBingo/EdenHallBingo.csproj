@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Dalamud.NET.SDK/11.0.0">
   <PropertyGroup>
-    <Version>0.0.0.4</Version>
+    <Version>0.0.0.5</Version>
     <Description>Bingo for Eden.</Description>
     <PackageProjectUrl>https://github.com/keagdo/EdenBingo</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
@@ -12,6 +12,12 @@
     <Content Include="images\icon.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <!-- <TargetPath>Images\icon.png</TargetPath> -->
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Data\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
     </Content>
   </ItemGroup>
 </Project>

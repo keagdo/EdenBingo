@@ -5,16 +5,23 @@ using System.Numerics;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
+using Dalamud.Plugin;
 using ImGuiNET;
 using Lumina.Excel.Sheets;
+using Dalamud.IoC;
+using System.IO;
+
 
 namespace EdenHallBingo.Windows;
 
 public class MainWindow : Window, IDisposable
 {
     private Plugin Plugin;
-    public MainWindow(Plugin plugin)
-        : base("Eden Hall Bingo##idtag", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+    [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+    private string LogoPath;
+    private static string versionID = "0.0.0.5";
+    public MainWindow(Plugin plugin, string logoPath)
+        : base($"Eden Hall Bingo v{versionID}##idtag", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         SizeConstraints = new WindowSizeConstraints
         {
@@ -23,6 +30,7 @@ public class MainWindow : Window, IDisposable
         };
         Plugin = plugin;
         Configuration = plugin.Configuration;
+        LogoPath = logoPath;
     }
 
     public void Dispose() { }
@@ -35,7 +43,7 @@ public class MainWindow : Window, IDisposable
         if (ImGui.BeginTabBar("MainTabBar"))
         {
             // "Create New" tab - First tab for input
-            if (ImGui.BeginTabItem("Create New"))
+            if (ImGui.BeginTabItem("Home"))
             {
                 if (Configuration.AdminCode == "Cheesecakes!") 
                 {
@@ -44,7 +52,7 @@ public class MainWindow : Window, IDisposable
                         Plugin.ToggleAdminUI();
                     }
                 }
-                ImGui.InputText("##CodeInput", ref inputCode, 100, ImGuiInputTextFlags.EnterReturnsTrue);
+                ImGui.InputTextWithHint("##CodeInput", "Input code received from game master:", ref inputCode, 100, ImGuiInputTextFlags.EnterReturnsTrue);
 
                 if (ImGui.IsItemDeactivatedAfterEdit()) // Enter key handling
                 {
@@ -52,7 +60,7 @@ public class MainWindow : Window, IDisposable
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button("Add Tab"))
+                if (ImGui.Button("Create Board"))
                 {
                     AddNewTab();
                 }
@@ -67,11 +75,33 @@ public class MainWindow : Window, IDisposable
                 ImGui.Spacing();
 
                 // Delete All Tabs Button
-                if (tabs.Count > 1 && ImGui.Button("Delete All Tabs"))
+                if (tabs.Count > 1) 
                 {
-                    tabs.RemoveRange(1, tabs.Count - 1); // Keep only "Create New"
-                    usedCode = false;
+                    if (ImGui.Button("Close All Boards")) 
+                    {
+                        tabs.RemoveRange(1, tabs.Count - 1); // Keep only "Create New"
+                        usedCode = false;
+                    }
                 }
+                else 
+                {
+                    ImGui.BeginDisabled();
+                    ImGui.Button("Close All Boards");
+                    ImGui.EndDisabled();
+                }
+                
+                // // var test = PluginInterface.AssemblyLocation.Directory?.FullName!;
+                // // logoPath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "logo.png");
+                // // Plugin.Log.Debug(logoPath);
+                // var logoImage = Plugin.TextureProvider.GetFromFile(LogoPath).GetWrapOrDefault();
+                // if (logoImage != null)
+                // {
+                //     ImGui.Image(logoImage.ImGuiHandle, new Vector2(logoImage.Width, logoImage.Height));
+                // }
+                // else
+                // {
+                //     ImGui.TextUnformatted("Image not found.");
+                // }
 
                 ImGui.EndTabItem();
             }
