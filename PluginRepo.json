@@ -1,0 +1,25 @@
+[
+    {
+        "Author": "Allison",
+        "Name": "Eden Hall Bingo",
+        "InternalName": "EdenHallBingo",
+        "AssemblyVersion": "0.0.0.1",
+        "Punchline": "Play bingo.",
+        "Description": "Made for Eden Hall Venue. Open Wends/Sunday 10pm-2am EST.",
+        "ApplicableVersion": "any",
+        "Tags": [
+        "Eden Hall",
+        "Bingo"
+        ],
+        "DalamudApiLevel": 11,
+        "LoadRequiredState": 0,
+        "LoadSync": true,
+        "CanUnloadAsync": false,
+        "LoadPriority": 0,
+        "AcceptsFeedback": true,
+        "IconUrl": "https://github.com/keagdo/EdenBingo/blob/master/EdenHallBingo/Images/icon.png",
+        "DownloadCount": -1,
+        "DownloadLinkInstall": "https://github.com/keagdo/.zip",
+        "DownloadLinkUpdate": "https://github.com/keagdo/.zip"
+    }
+]
