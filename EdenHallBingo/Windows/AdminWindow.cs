@@ -21,7 +21,9 @@ public class AdminWindow : Window, IDisposable
     private string manualInput = ""; // Input field for manual number entry
     private Random rng = new Random();
 
-    public AdminWindow(Plugin plugin): base("Eden Hall Bingo Admin Tab##idtag", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+    private int selectedIndex = 0;
+
+    public AdminWindow(Plugin plugin): base("Eden Hall Bingo Admin Tab##idtag", ImGuiWindowFlags.HorizontalScrollbar)
     {
         SizeConstraints = new WindowSizeConstraints
         {
@@ -94,21 +96,9 @@ public class AdminWindow : Window, IDisposable
 
                 ImGui.EndTabItem();
             }
-            // bool anyPlayerHasWinner = tabs.Any(tab => tab.Boards.Any(board => board.isWinner)); // Check if any player has a winning board
-
-            // if (anyPlayerHasWinner)
-            // {
-            //     ImGui.PushStyleColor(ImGuiCol.Tab, new Vector4(0.8f, 0.2f, 0.2f, 1.0f)); // Red highlight
-            //     ImGui.PushStyleColor(ImGuiCol.TabHovered, new Vector4(1.0f, 0.4f, 0.4f, 1.0f)); // Lighter red on hover
-            //     ImGui.PushStyleColor(ImGuiCol.TabActive, new Vector4(1.0f, 0.6f, 0.6f, 1.0f)); // Bright red when active
-            // }
 
             if (ImGui.BeginTabItem("Players"))
             {
-                // if (anyPlayerHasWinner)
-                // {
-                //     ImGui.PopStyleColor(3); // Restore colors after "Players" tab is drawn
-                // }
 
                 if (ImGui.BeginTabBar("PlayerTabBar"))
                 {
@@ -116,43 +106,39 @@ public class AdminWindow : Window, IDisposable
                     {
                         bool hasWinner = tabs[i].Boards.Any(board => board.isWinner); // Check if this player has a winning board
 
-                        // if (hasWinner)
-                        // {
-                        //     ImGui.PushStyleColor(ImGuiCol.Tab, new Vector4(0.8f, 0.2f, 0.2f, 1.0f)); // Red highlight
-                        //     ImGui.PushStyleColor(ImGuiCol.TabHovered, new Vector4(1.0f, 0.4f, 0.4f, 1.0f)); // Lighter red on hover
-                        //     ImGui.PushStyleColor(ImGuiCol.TabActive, new Vector4(1.0f, 0.6f, 0.6f, 1.0f)); // Bright red when active
-                        // }
-
                         if (ImGui.BeginTabItem(tabs[i].Title))
                         {
                             DrawBingoBoard(tabs[i]);
                             ImGui.EndTabItem();
                         }
 
-                        // if (hasWinner)
-                        // {
-                        //     ImGui.PopStyleColor(3); // Restore colors after the player's tab is drawn
-                        // }
                     }
                     ImGui.EndTabBar();
                 }
                 ImGui.EndTabItem();
             }
 
-            // if (anyPlayerHasWinner)
-            // {
-            //     ImGui.PopStyleColor(3); // Restore colors after Players tab is finished
-            // }
 
             if (ImGui.BeginTabItem("Draw Numbers"))
             {
-                ImGui.BeginChild("DrawNumbersScroll", new Vector2(0, 300), true, ImGuiWindowFlags.HorizontalScrollbar);
                 ImGui.Text("Bingo Number Draw");
-
                 // Button to draw a random number
                 if (ImGui.Button("Draw Random Number"))
                 {
                     DrawRandomNumber();
+                    int lastNumber = drawnNumbers.Last(); // Get the most recent drawn number
+                    string columnLetter = lastNumber switch
+                    {
+                        >= 1 and <= 15 => "B",
+                        >= 16 and <= 30 => "I",
+                        >= 31 and <= 45 => "N",
+                        >= 46 and <= 60 => "G",
+                        >= 61 and <= 75 => "O",
+                        _ => "?"
+                    };
+                    string shoutMessage = $"/shout Bingo Drawing #{drawnNumbers.Count-1} is {columnLetter}{lastNumber}";
+                    ImGui.SetClipboardText(shoutMessage);
+                    selectedIndex = drawnNumbers.Count - 1;
                 }
 
                 // Manual input for admin
@@ -172,8 +158,12 @@ public class AdminWindow : Window, IDisposable
 
                 if (drawnNumbers.Count > 1) // Ensure at least one valid number is drawn
                 {
-                    int lastNumber = drawnNumbers.Last(); // Get the most recent drawn number
-                    string columnLetter = lastNumber switch
+                    selectedIndex = Math.Clamp(selectedIndex, 0, drawnNumbers.Count - 1);
+
+                    // Navigation buttons
+                    int selectedNumber = drawnNumbers[selectedIndex];
+                    // Determine column letter based on selected number
+                    string columnLetter = selectedNumber switch
                     {
                         >= 1 and <= 15 => "B",
                         >= 16 and <= 30 => "I",
@@ -183,11 +173,21 @@ public class AdminWindow : Window, IDisposable
                         _ => "?"
                     };
 
-                    ImGui.Text("Most recent drawing: ");
+                    ImGui.Text($"Selected drawing #{selectedIndex}: ");
                     ImGui.SameLine();
-                    ImGui.TextColored(new Vector4(1, 0, 0, 1), $"{columnLetter} {lastNumber}"); // Red color
+                    ImGui.TextColored(new Vector4(1, 0, 0, 1), $"{columnLetter} {selectedNumber}"); // Red color
+                    ImGui.SameLine();
+                    if (ImGui.Button("Previous"))
+                    {
+                        if (selectedIndex > 1) selectedIndex--;
+                    }
+                    ImGui.SameLine();
+                    if (ImGui.Button("Next"))
+                    {
+                        if (selectedIndex < drawnNumbers.Count - 1) selectedIndex++;
+                    }
 
-                    string shoutMessage = $"/shout Bingo Drawing #{drawnNumbers.Count-1} is {columnLetter}{lastNumber}";
+                    string shoutMessage = $"/shout Bingo Drawing #{selectedIndex} is {columnLetter}{selectedNumber}";
                     // Button to copy to clipboard
                     if (ImGui.Button($"Copy Shout Message: {shoutMessage}"))
                     {
@@ -246,7 +246,6 @@ public class AdminWindow : Window, IDisposable
 
                     ImGui.NewLine(); // Move to the next row
                 }
-                ImGui.EndChild();
             }
             ImGui.EndTabBar();
         }
@@ -258,7 +257,7 @@ public class AdminWindow : Window, IDisposable
             return;
 
         // Find the player's tab
-        TabData existingTab = tabs.FirstOrDefault(tab => tab.Title == playerName);
+        TabData? existingTab = tabs.FirstOrDefault(tab => tab.Title == playerName);
 
         if (existingTab != null)
         {
@@ -274,7 +273,7 @@ public class AdminWindow : Window, IDisposable
         generatedCodes.Clear();
 
         // Check if the player already has a tab
-        TabData existingTab = tabs.FirstOrDefault(tab => tab.Title == playerName);
+        TabData? existingTab = tabs.FirstOrDefault(tab => tab.Title == playerName);
 
         if (existingTab != null)
         {
@@ -327,26 +326,12 @@ public class AdminWindow : Window, IDisposable
             for (int i = 0; i < tab.Boards.Count; i++)
             {
                 string tabLabel = $"Board {i + 1}";
-                // bool isWinner = tab.Boards[i].isWinner;
-
-                // if (isWinner)
-                // {
-                //     ImGui.PushStyleColor(ImGuiCol.Tab, new Vector4(0.8f, 0.2f, 0.2f, 1.0f)); // Red for winners
-                //     ImGui.PushStyleColor(ImGuiCol.TabHovered, new Vector4(1.0f, 0.4f, 0.4f, 1.0f)); // Lighter red on hover
-                //     ImGui.PushStyleColor(ImGuiCol.TabActive, new Vector4(1.0f, 0.6f, 0.6f, 1.0f)); // Bright red when active
-                //     tab.hasWinner = true;
-                // }
 
                 if (ImGui.BeginTabItem(tabLabel))
                 {
                     DrawSingleBingoBoard(tab.Boards[i]);
                     ImGui.EndTabItem();
                 }
-
-                // if (isWinner)
-                // {
-                //     ImGui.PopStyleColor(3); // Restore colors
-                // }
             }
             ImGui.EndTabBar();
         }
@@ -354,6 +339,12 @@ public class AdminWindow : Window, IDisposable
 
     private void DrawSingleBingoBoard(BingoBoard board)
     {
+        ImGui.Text($"Board Code: {board.Code}");
+        ImGui.SameLine();
+        if (ImGui.Button("Copy Code Clipboard"))
+        {
+            ImGui.SetClipboardText(board.Code);
+        }
         string[] bingoLetters = { "B", "I", "N", "G", "O" };
 
         // Display "BINGO" header
