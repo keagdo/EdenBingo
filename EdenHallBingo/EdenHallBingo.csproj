@@ -7,13 +7,7 @@
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <!-- <ItemGroup>
-    <Content Include="..\Data\goat.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>
-    </Content>
-  </ItemGroup> -->
+  
   <ItemGroup>
     <Content Include="Images\icon.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
