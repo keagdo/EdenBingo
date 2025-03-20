@@ -19,7 +19,8 @@ public class MainWindow : Window, IDisposable
     private Plugin Plugin;
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     private string LogoPath;
-    private static string versionID = "0.0.0.5";
+    private static string versionID = "0.0.0.6";
+    private List<TabData> tabs;
     public MainWindow(Plugin plugin, string logoPath)
         : base($"Eden Hall Bingo v{versionID}##idtag", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
@@ -31,11 +32,11 @@ public class MainWindow : Window, IDisposable
         Plugin = plugin;
         Configuration = plugin.Configuration;
         LogoPath = logoPath;
+        tabs = Configuration.tabs;
     }
 
     public void Dispose() { }
     private string inputCode = "";
-    private List<TabData> tabs = new List<TabData> { new TabData("Create New") };
     private Configuration Configuration;
     private bool usedCode = false;
     public override void Draw()
@@ -60,7 +61,7 @@ public class MainWindow : Window, IDisposable
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button("Create Board"))
+                if (ImGui.Button("Open Board"))
                 {
                     AddNewTab();
                 }
@@ -75,12 +76,15 @@ public class MainWindow : Window, IDisposable
                 ImGui.Spacing();
 
                 // Delete All Tabs Button
-                if (tabs.Count > 1) 
+                if (tabs.Count > 0) 
                 {
                     if (ImGui.Button("Close All Boards")) 
                     {
-                        tabs.RemoveRange(1, tabs.Count - 1); // Keep only "Create New"
+                        tabs.Clear(); // Keep only "Create New"
                         usedCode = false;
+
+                        Configuration.tabs = tabs;
+                        Configuration.Save();
                     }
                 }
                 else 
@@ -107,9 +111,9 @@ public class MainWindow : Window, IDisposable
             }
 
             // Draw dynamically created tabs
-            for (int i = 1; i < tabs.Count; i++)
+            for (int i = 0; i < tabs.Count; i++)
             {
-                if (ImGui.BeginTabItem($"Board {i}"))
+                if (ImGui.BeginTabItem($"Board {i+1}"))
                 {
                     DrawBingoBoard(tabs[i]);
                     ImGui.EndTabItem();
@@ -137,6 +141,8 @@ public class MainWindow : Window, IDisposable
                 tabs.Add(boardTab); // Create new tab
                 inputCode = ""; // Clear input after adding
                 usedCode = false;
+                Configuration.tabs = tabs;
+                Configuration.Save();
             }
         }
     }

@@ -15,14 +15,14 @@ public class AdminWindow : Window, IDisposable
     private string playerName = "";
     private int boardCount = 1;
     private List<string> generatedCodes = new();
-    private List<TabData> tabs = new();
+    private List<TabData> tabs;
 
     private List<int> drawnNumbers = new List<int> { 0 }; // List to store drawn numbers
     private string manualInput = ""; // Input field for manual number entry
     private Random rng = new Random();
 
     private int selectedIndex = 0;
-
+    private Configuration Configuration;
     public AdminWindow(Plugin plugin): base("Eden Hall Bingo Admin Tab##idtag", ImGuiWindowFlags.HorizontalScrollbar)
     {
         SizeConstraints = new WindowSizeConstraints
@@ -30,6 +30,8 @@ public class AdminWindow : Window, IDisposable
             // MinimumSize = new Vector2(375, 330),
             // MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
+        Configuration = plugin.Configuration;
+        tabs = Configuration.tabs;
     }
 
     public override void Draw()
@@ -63,6 +65,8 @@ public class AdminWindow : Window, IDisposable
                     if (ImGui.Button("Delete All Players (Hold Shift)")) 
                     {
                         tabs.Clear();
+                        Configuration.adminTabs = tabs;
+                        Configuration.Save();
                     }
                 }
                 else 
@@ -104,7 +108,7 @@ public class AdminWindow : Window, IDisposable
                 {
                     for (int i = 0; i < tabs.Count; i++)
                     {
-                        bool hasWinner = tabs[i].Boards.Any(board => board.isWinner); // Check if this player has a winning board
+                        // bool hasWinner = tabs[i].Boards.Any(board => board.isWinner); // Check if this player has a winning board
 
                         if (ImGui.BeginTabItem(tabs[i].Title))
                         {
@@ -262,6 +266,8 @@ public class AdminWindow : Window, IDisposable
         if (existingTab != null)
         {
             tabs.Remove(existingTab); // Remove the tab
+            Configuration.adminTabs = tabs;
+            Configuration.Save();
         }
     }
 
@@ -298,6 +304,8 @@ public class AdminWindow : Window, IDisposable
             }
             tabs.Add(newTab);
         }
+        Configuration.adminTabs = tabs;
+        Configuration.Save();
 
         playerName = ""; // Reset input
         boardCount = 1;

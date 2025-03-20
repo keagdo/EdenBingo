@@ -1,6 +1,7 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
 using System;
+using System.Collections.Generic;
 
 namespace EdenHallBingo;
 
@@ -15,4 +16,7 @@ public class Configuration : IPluginConfiguration
     {
         Plugin.PluginInterface.SavePluginConfig(this);
     }
+
+    public List<TabData> tabs { get; set; } = new List<TabData>{};
+    public List<TabData> adminTabs { get; set; } = new List<TabData>{};
 }
