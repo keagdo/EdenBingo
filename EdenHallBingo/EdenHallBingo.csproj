@@ -9,7 +9,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Content Include="Images\icon.png">
+    <Content Include="images\icon.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <!-- <TargetPath>Images\icon.png</TargetPath> -->
     </Content>
