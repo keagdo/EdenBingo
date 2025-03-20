@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Security.Cryptography;
+using System.Text;
 public class BingoBoard
 {
     public int[] Board { get; private set; } = new int[25];
@@ -16,9 +17,18 @@ public class BingoBoard
         GenerateBingoBoard();
     }
 
+        public static int GetStableHash(string input)
+    {
+        using (var md5 = MD5.Create()) // Can use other stable hashes too
+        {
+            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+            return BitConverter.ToInt32(hash, 0); // Convert first 4 bytes to int
+        }
+    }
+
     private void GenerateBingoBoard()
     {
-        Random rng = new Random(Code.GetHashCode()); // Seed with code for consistency
+        Random rng = new Random(GetStableHash(Code)); // Seed with code for consistency
         
         Board = new int[25]; // 5x5 grid
         
