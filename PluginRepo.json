@@ -17,7 +17,7 @@
         "CanUnloadAsync": false,
         "LoadPriority": 0,
         "AcceptsFeedback": true,
-        "IconUrl": "https://github.com/keagdo/EdenBingo/blob/master/EdenHallBingo/Images/icon.png",
+        "IconUrl": "https://raw.githubusercontent.com/keagdo/EdenBingo/master/EdenHallBingo/Images/icon.png",
         "DownloadCount": -1,
         "DownloadLinkInstall": "https://github.com/keagdo/EdenBingo/releases/download/onPublish/latest.zip",
         "DownloadLinkUpdate": "https://github.com/keagdo/EdenBingo/releases/download/onPublish/latest.zip"
