@@ -19,7 +19,7 @@
         "AcceptsFeedback": true,
         "IconUrl": "https://github.com/keagdo/EdenBingo/blob/master/EdenHallBingo/Images/icon.png",
         "DownloadCount": -1,
-        "DownloadLinkInstall": "https://github.com/keagdo/.zip",
-        "DownloadLinkUpdate": "https://github.com/keagdo/.zip"
+        "DownloadLinkInstall": "https://github.com/keagdo/EdenBingo/blob/master/EdenHallBingo/Releases/download/v0.0.0.1/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/keagdo/EdenBingo/blob/master/EdenHallBingo/Releases/download/v0.0.0.1/latest.zip"
     }
 ]
