@@ -19,7 +19,7 @@ public class MainWindow : Window, IDisposable
     private Plugin Plugin;
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     private string LogoPath;
-    private static string versionID = "0.0.0.7";
+    private static string versionID = "0.0.0.8";
     private List<TabData> tabs;
     public MainWindow(Plugin plugin, string logoPath)
         : base($"Eden Hall Bingo v{versionID}##idtag", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)

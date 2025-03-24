@@ -16,7 +16,6 @@ public class AdminWindow : Window, IDisposable
     private int boardCount = 1;
     private List<string> generatedCodes = new();
     private List<TabData> tabs;
-
     private List<int> drawnNumbers = new List<int> { 0 }; // List to store drawn numbers
     private string manualInput = ""; // Input field for manual number entry
     private Random rng = new Random();
@@ -76,6 +75,14 @@ public class AdminWindow : Window, IDisposable
                     ImGui.EndDisabled();
                 }
 
+                if (ImGui.Button("Export Player Codes to Clipboard")) 
+                {
+                    ExportCodes();
+                }
+                if (ImGui.Button("Export Draws to Clipboard")) 
+                {
+                    ExportNumbers();
+                }
                 // Display generated codes
                 if (generatedCodes.Count > 0)
                 {
@@ -191,7 +198,7 @@ public class AdminWindow : Window, IDisposable
                         if (selectedIndex < drawnNumbers.Count - 1) selectedIndex++;
                     }
 
-                    string shoutMessage = $"/shout Bingo Drawing #{selectedIndex} is {columnLetter}{selectedNumber}";
+                    string shoutMessage = $"/yell Bingo Drawing #{selectedIndex} is {columnLetter}{selectedNumber}";
                     // Button to copy to clipboard
                     if (ImGui.Button($"Copy Shout Message: {shoutMessage}"))
                     {
@@ -253,6 +260,31 @@ public class AdminWindow : Window, IDisposable
             }
             ImGui.EndTabBar();
         }
+    }
+
+    private void ExportNumbers()
+    {
+        string numbers = string.Join(", ", drawnNumbers);
+        ImGui.SetClipboardText(numbers);
+    }
+
+    private void ExportCodes()
+    {
+        StringBuilder codes = new StringBuilder();
+
+        foreach (var tab in tabs)
+        {
+            codes.AppendLine(tab.Title); // Add the tab title
+
+            foreach (var board in tab.Boards)
+            {
+                codes.AppendLine(board.Code); // Add the board code under the title
+            }
+
+            codes.AppendLine(); // Add a blank line for separation
+        }
+
+        ImGui.SetClipboardText(codes.ToString());
     }
 
     private void DeletePlayer()
