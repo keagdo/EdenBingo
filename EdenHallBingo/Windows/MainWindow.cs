@@ -77,6 +77,25 @@ public class MainWindow : Window, IDisposable
     private string inputCode = "";
     private Configuration Configuration;
     private bool usedCode = false;
+
+    private int GetDeterministicHashCode(string str)
+    {
+        unchecked
+        {
+            int hash1 = (5381 << 16) + 5381;
+            int hash2 = hash1;
+
+            for (int i = 0; i < str.Length; i += 2)
+            {
+                hash1 = ((hash1 << 5) + hash1) ^ str[i];
+                if (i == str.Length - 1)
+                    break;
+                hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+            }
+
+            return hash1 + (hash2 * 1566083941);
+        }
+    }
     public override void Draw()
     {
         if (codes.Count>0)
@@ -86,7 +105,6 @@ public class MainWindow : Window, IDisposable
                 AutoAddNewTab(code);
             }
             codes.Clear();
-            chatManager.SendMessage("/echo Thanks for playing Bingo! Your new boards have been loaded! Please use /bingo to see the boards! <se.1>");
         }
         
         if (ImGui.BeginTabBar("MainTabBar"))
@@ -94,9 +112,9 @@ public class MainWindow : Window, IDisposable
             // "Create New" tab - First tab for input
             if (ImGui.BeginTabItem("Home"))
             {
-                if (Configuration.AdminCode == "Cheesecakes!") 
+                if (GetDeterministicHashCode(Configuration.AdminCode) == -1226680257) 
                 {
-                    if (ImGui.Button("Open Admin Window"))
+                    if (ImGui.Button($"Open Admin Window"))
                     {
                         Plugin.ToggleAdminUI();
                     }

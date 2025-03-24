@@ -34,9 +34,34 @@ public class ConfigWindow : Window, IDisposable
             Configuration.SendChats = chats;
             Configuration.Save();
         }
-        if (code == "Cheesecakes!")
+
+        var channel = Configuration.Channel;
+        if (ImGui.InputText("Enter channel to send tells in!", ref channel, 128))
+        {
+            Configuration.Channel = channel;
+            Configuration.Save();
+        }
+        if (GetDeterministicHashCode(code) == -1226680257)
         {
             ImGui.TextUnformatted("Admin Mode Activated!");
+        }
+    }
+    private int GetDeterministicHashCode(string str)
+    {
+        unchecked
+        {
+            int hash1 = (5381 << 16) + 5381;
+            int hash2 = hash1;
+
+            for (int i = 0; i < str.Length; i += 2)
+            {
+                hash1 = ((hash1 << 5) + hash1) ^ str[i];
+                if (i == str.Length - 1)
+                    break;
+                hash2 = ((hash2 << 5) + hash2) ^ str[i + 1];
+            }
+
+            return hash1 + (hash2 * 1566083941);
         }
     }
 }

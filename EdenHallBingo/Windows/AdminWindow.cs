@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using Dalamud.Interface.Windowing;
 using EdenHallBingo.Helpers;
@@ -204,9 +205,13 @@ public class AdminWindow : Window, IDisposable
                         if (selectedIndex < drawnNumbers.Count - 1) selectedIndex++;
                     }
 
-                    string shoutMessage = $"/yell Bingo Drawing #{selectedIndex} is {columnLetter}{selectedNumber}";
+                    string shoutMessage = $"{Configuration.Channel} Bingo Drawing #{selectedIndex} is {columnLetter}{selectedNumber}";
                     // Button to copy to clipboard
                     if (ImGui.Button($"Copy Shout Message: {shoutMessage}"))
+                    {
+                        ImGui.SetClipboardText(shoutMessage);
+                    }
+                    if (Configuration.SendChats)
                     {
                         ImGui.SetClipboardText(shoutMessage);
                     }
@@ -332,6 +337,7 @@ public class AdminWindow : Window, IDisposable
             if (Configuration.SendChats)
             {
                 Chat($"/tell <t> Thanks for playing Bingo! Here are your {generatedCodes.Count} extra codes! Your codes are: {string.Join(", ", generatedCodes)}");
+                Chat("/tell <t> Thanks for playing Bingo! Your new boards have been loaded! Please use /bingo to see the boards!");
             }
         }
         else
@@ -348,6 +354,7 @@ public class AdminWindow : Window, IDisposable
             if (Configuration.SendChats)
             {
                 Chat($"/tell <t> Thanks for playing Bingo! I am sending you {generatedCodes.Count} codes to start your game! Your codes are: {string.Join(", ", generatedCodes)}");
+                Chat("/tell <t> Thanks for playing Bingo! Your new boards have been loaded! Please use /bingo to see the boards!");
             }
         }
         Configuration.adminTabs = tabs;
