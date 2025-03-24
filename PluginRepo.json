@@ -3,7 +3,7 @@
         "Author": "Allison",
         "Name": "Eden Hall Bingo",
         "InternalName": "EdenHallBingo",
-        "AssemblyVersion": "0.0.0.9",
+        "AssemblyVersion": "0.0.0.11",
         "Punchline": "Play bingo.",
         "Description": "Made for Eden Hall Hostess Club.  www.edenhall.club",
         "ApplicableVersion": "any",
@@ -19,7 +19,7 @@
         "AcceptsFeedback": true,
         "IconUrl": "https://raw.githubusercontent.com/keagdo/EdenBingo/master/EdenHallBingo/images/icon.png",
         "DownloadCount": -1,
-        "DownloadLinkInstall": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.0.9/latest.zip",
-        "DownloadLinkUpdate": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.0.9/latest.zip"
+        "DownloadLinkInstall": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.0.11/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.0.11/latest.zip"
     }
 ]
