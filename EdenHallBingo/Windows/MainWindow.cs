@@ -49,10 +49,10 @@ public class MainWindow : Window, IDisposable
         {
             // Strict regex pattern for the exact message format
             Regex regex1 = new Regex(
-                @"^Thanks for playing Bingo! I am sending you \d+ codes to start your game! Your codes are: ([A-Z0-9]+(?:, [A-Z0-9]+)*)$",
+                @"^Thanks for playing Bingo! I am sending you \d+ codes to start your game! Your codes are: ([A-Za-z0-9/+]+(?:, [A-Za-z0-9/+]+)*)$",
                 RegexOptions.IgnoreCase);
             Regex regex2 = new Regex(
-                @"^Thanks for playing Bingo! Here are your \d+ extra codes! Your codes are: ([A-Z0-9]+(?:, [A-Z0-9]+)*)$",
+                @"^Thanks for playing Bingo! Here are your \d+ extra codes! Your codes are: ([A-Za-z0-9/+]+(?:, [A-Za-z0-9/+]+)*)$",
                 RegexOptions.IgnoreCase);
 
             Match match1 = regex1.Match(messageText);
