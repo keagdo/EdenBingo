@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Dalamud.NET.SDK/11.0.0">
   <PropertyGroup>
-    <Version>0.0.0.12</Version>
+    <Version>0.0.0.13</Version>
     <Description>Bingo for Eden.</Description>
     <PackageProjectUrl>https://github.com/keagdo/EdenBingo</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
