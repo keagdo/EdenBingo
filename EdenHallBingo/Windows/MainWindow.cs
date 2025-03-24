@@ -23,7 +23,7 @@ public class MainWindow : Window, IDisposable
     private Plugin Plugin;
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     private string LogoPath;
-    private static string versionID = "0.0.0.11";
+    private static string versionID = "0.0.0.12";
     private List<TabData> tabs;
     ChatManager chatManager = new ChatManager();
     public MainWindow(Plugin plugin, string logoPath)
