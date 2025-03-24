@@ -26,6 +26,14 @@ public class ConfigWindow : Window, IDisposable
             Configuration.AdminCode = code;
             Configuration.Save();
         }
+
+        bool chats = Configuration.SendChats;
+        if (ImGui.Button($"Send Chats on Draw Numbers: {chats}"))
+        {
+            chats = !chats;
+            Configuration.SendChats = chats;
+            Configuration.Save();
+        }
         if (code == "Cheesecakes!")
         {
             ImGui.TextUnformatted("Admin Mode Activated!");

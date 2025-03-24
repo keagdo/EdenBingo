@@ -4,7 +4,9 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using Dalamud.Interface.Windowing;
+using EdenHallBingo.Helpers;
 using ImGuiNET;
 
 namespace EdenHallBingo.Windows;
@@ -16,12 +18,14 @@ public class AdminWindow : Window, IDisposable
     private int boardCount = 1;
     private List<string> generatedCodes = new();
     private List<TabData> tabs;
+    public Plugin P;
     private List<int> drawnNumbers = new List<int> { 0 }; // List to store drawn numbers
     private string manualInput = ""; // Input field for manual number entry
     private Random rng = new Random();
-
+    // ChatManager chatManager = new ChatManager();
     private int selectedIndex = 0;
     private Configuration Configuration;
+    ChatManager chatManager = new ChatManager();
     public AdminWindow(Plugin plugin): base("Eden Hall Bingo Admin Tab##idtag", ImGuiWindowFlags.HorizontalScrollbar)
     {
         SizeConstraints = new WindowSizeConstraints
@@ -30,11 +34,13 @@ public class AdminWindow : Window, IDisposable
             // MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
         Configuration = plugin.Configuration;
-        tabs = Configuration.tabs;
+        tabs = Configuration.adminTabs;
+        P = plugin;
     }
 
     public override void Draw()
     {
+        ProcessChatQueue();
         if (ImGui.BeginTabBar("MainTabBar"))
         {
             if (ImGui.BeginTabItem("Add Player"))
@@ -323,6 +329,10 @@ public class AdminWindow : Window, IDisposable
                 generatedCodes.Add(code);
                 existingTab.Boards.Add(new BingoBoard(code)); // Ensure BingoBoard constructor is valid
             }
+            if (Configuration.SendChats)
+            {
+                Chat($"/tell <t> Thanks for playing Bingo! Here are your {generatedCodes.Count} extra codes! Your codes are: {string.Join(", ", generatedCodes)}");
+            }
         }
         else
         {
@@ -335,6 +345,10 @@ public class AdminWindow : Window, IDisposable
                 newTab.Boards.Add(new BingoBoard(code));
             }
             tabs.Add(newTab);
+            if (Configuration.SendChats)
+            {
+                Chat($"/tell <t> Thanks for playing Bingo! I am sending you {generatedCodes.Count} codes to start your game! Your codes are: {string.Join(", ", generatedCodes)}");
+            }
         }
         Configuration.adminTabs = tabs;
         Configuration.Save();
@@ -491,6 +505,32 @@ public class AdminWindow : Window, IDisposable
         else
         {
             ImGui.TextColored(new Vector4(1, 0, 0, 1), "Invalid or duplicate number!"); // Red warning
+        }
+    }
+    private Queue<string> chatQueue = new Queue<string>();
+    private bool isChatting = false;
+    private float chatCooldown = 1.00f; // Adjust delay as needed (in seconds)
+    private DateTime lastChatTime = DateTime.MinValue;
+
+    public void Chat(string message)
+    {
+        chatQueue.Enqueue(message);
+    }
+
+    public async Task AwaitChatQueue()
+    {
+        while (chatQueue.Count > 0)
+        {
+            await Task.Delay(500);
+        }
+    }
+    private void ProcessChatQueue()
+    {
+        if (chatQueue.Count > 0 && (DateTime.Now - lastChatTime).TotalSeconds >= chatCooldown)
+        {
+            string message = chatQueue.Dequeue();
+            chatManager.SendMessage(message);
+            lastChatTime = DateTime.Now; // Update the last chat time
         }
     }
 }

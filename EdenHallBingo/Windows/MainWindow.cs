@@ -10,6 +10,10 @@ using ImGuiNET;
 using Lumina.Excel.Sheets;
 using Dalamud.IoC;
 using System.IO;
+using EdenHallBingo.Helpers;
+using Dalamud.Game.Text;
+using Dalamud.Game.Text.SeStringHandling;
+using System.Text.RegularExpressions;
 
 
 namespace EdenHallBingo.Windows;
@@ -19,8 +23,9 @@ public class MainWindow : Window, IDisposable
     private Plugin Plugin;
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     private string LogoPath;
-    private static string versionID = "0.0.0.9";
+    private static string versionID = "0.0.0.10";
     private List<TabData> tabs;
+    ChatManager chatManager = new ChatManager();
     public MainWindow(Plugin plugin, string logoPath)
         : base($"Eden Hall Bingo v{versionID}##idtag", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
@@ -33,6 +38,40 @@ public class MainWindow : Window, IDisposable
         Configuration = plugin.Configuration;
         LogoPath = logoPath;
         tabs = Configuration.tabs;
+        Plugin.Chat.ChatMessage += OnChatMessage;
+    }
+
+    public List<string> codes = new List<string>();
+    private void OnChatMessage(XivChatType type, int timestamp, ref SeString sender, ref SeString message, ref bool isHandled)
+    {
+        string messageText = message.TextValue;
+        if (type == XivChatType.TellIncoming)
+        {
+            // Strict regex pattern for the exact message format
+            Regex regex1 = new Regex(
+                @"^Thanks for playing Bingo! I am sending you \d+ codes to start your game! Your codes are: ([A-Z0-9]+(?:, [A-Z0-9]+)*)$",
+                RegexOptions.IgnoreCase);
+            Regex regex2 = new Regex(
+                @"^Thanks for playing Bingo! Here are your \d+ extra codes! Your codes are: ([A-Z0-9]+(?:, [A-Z0-9]+)*)$",
+                RegexOptions.IgnoreCase);
+
+            Match match1 = regex1.Match(messageText);
+            Match match2 = regex2.Match(messageText);
+
+            if (match1.Success)
+            {
+                // Extract the codes and split them into a list
+                codes = match1.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                tabs.Clear();
+            }
+            if (match2.Success)
+            {
+                codes = match2.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+
+            // If you want to suppress the message from showing in the in-game chat:
+            isHandled = true;
+        }
     }
 
     public void Dispose() { }
@@ -41,6 +80,16 @@ public class MainWindow : Window, IDisposable
     private bool usedCode = false;
     public override void Draw()
     {
+        if (codes.Count>0)
+        {
+            foreach (string code in codes)
+            {
+                AutoAddNewTab(code);
+            }
+            codes.Clear();
+            chatManager.SendMessage("/echo Thanks for playing Bingo! Your new boards have been loaded! Please use /bingo to see the boards! <se.1>");
+        }
+        
         if (ImGui.BeginTabBar("MainTabBar"))
         {
             // "Create New" tab - First tab for input
@@ -132,6 +181,27 @@ public class MainWindow : Window, IDisposable
             if (tabs.Any(tab => tab.Title == inputCode))
             {
                 inputCode = ""; // Clear input
+                usedCode = true;
+            }
+            else
+            {
+                var boardTab = new TabData(inputCode);
+                boardTab.AddBoard(inputCode);
+                tabs.Add(boardTab); // Create new tab
+                inputCode = ""; // Clear input after adding
+                usedCode = false;
+                Configuration.tabs = tabs;
+                Configuration.Save();
+            }
+        }
+    }
+    private void AutoAddNewTab(string inputCode)
+    {
+        if (!string.IsNullOrWhiteSpace(inputCode))
+        {
+            // Check if the code already exists
+            if (tabs.Any(tab => tab.Title == inputCode))
+            {
                 usedCode = true;
             }
             else

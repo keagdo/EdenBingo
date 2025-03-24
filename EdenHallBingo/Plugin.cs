@@ -5,6 +5,9 @@ using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using EdenHallBingo.Windows;
+using EdenHallBingo.Helpers;
+using ECommons.Automation;
+using ECommons;
 
 namespace EdenHallBingo;
 
@@ -16,7 +19,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
-
+    [PluginService] public static IChatGui Chat { get; private set; }
     private const string CommandName = "/bingo";
 
     public Configuration Configuration { get; init; }
@@ -25,18 +28,14 @@ public sealed class Plugin : IDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     private AdminWindow AdminWindow { get; init; }
-
     public Plugin()
     {
+        ECommonsMain.Init(PluginInterface, this);
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-
-        // you might normally want to embed resources and load them from the manifest stream
-        // var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
 
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this, Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "logo.png"));
         AdminWindow = new AdminWindow(this);
-
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
         WindowSystem.AddWindow(AdminWindow);
