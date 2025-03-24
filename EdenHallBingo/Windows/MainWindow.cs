@@ -63,14 +63,13 @@ public class MainWindow : Window, IDisposable
                 // Extract the codes and split them into a list
                 codes = match1.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 tabs.Clear();
+                isHandled = true;
             }
             if (match2.Success)
             {
                 codes = match2.Groups[1].Value.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                isHandled = true;
             }
-
-            // If you want to suppress the message from showing in the in-game chat:
-            isHandled = true;
         }
     }
 
