@@ -154,8 +154,12 @@ public class AdminWindow : Window, IDisposable
                         >= 61 and <= 75 => "O",
                         _ => "?"
                     };
-                    string shoutMessage = $"/shout Bingo Drawing #{drawnNumbers.Count-1} is {columnLetter}{lastNumber}";
+                    string shoutMessage = $"{Configuration.Channel} Bingo Drawing #{drawnNumbers.Count-1} is {columnLetter}{lastNumber}";
                     ImGui.SetClipboardText(shoutMessage);
+                    if (Configuration.SendChats)
+                    {
+                        Chat(shoutMessage);
+                    }
                     selectedIndex = drawnNumbers.Count - 1;
                 }
 
@@ -208,10 +212,6 @@ public class AdminWindow : Window, IDisposable
                     string shoutMessage = $"{Configuration.Channel} Bingo Drawing #{selectedIndex} is {columnLetter}{selectedNumber}";
                     // Button to copy to clipboard
                     if (ImGui.Button($"Copy Shout Message: {shoutMessage}"))
-                    {
-                        ImGui.SetClipboardText(shoutMessage);
-                    }
-                    if (Configuration.SendChats)
                     {
                         ImGui.SetClipboardText(shoutMessage);
                     }
@@ -515,8 +515,7 @@ public class AdminWindow : Window, IDisposable
         }
     }
     private Queue<string> chatQueue = new Queue<string>();
-    private bool isChatting = false;
-    private float chatCooldown = 1.00f; // Adjust delay as needed (in seconds)
+    private float chatCooldown = 2.00f; // Adjust delay as needed (in seconds)
     private DateTime lastChatTime = DateTime.MinValue;
 
     public void Chat(string message)
