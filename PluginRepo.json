@@ -21,8 +21,8 @@
         "DownloadCount": -1,
         "DownloadLinkInstall": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.1.1/latest.zip",
         "DownloadLinkUpdate": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.1.1/latest.zip"
-    },
-    {
+  },
+  {
         "Author": "Warpholome", 
         "Name": "DozeAnywhere",
         "InternalName": "DozeAnywhere",
@@ -40,5 +40,5 @@
         "LoadPriority": 0,
         "Punchline": "Sit or doze anywhere.",
         "AcceptsFeedback": true
-    },
+    }
 ]
