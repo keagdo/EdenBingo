@@ -1,4 +1,23 @@
 [
+  {
+        "Author": "Warpholome", 
+        "Name": "DozeAnywhere",
+        "InternalName": "DozeAnywhere",
+        "AssemblyVersion": "1.4.0.0",
+        "Description": "Allows you to sit or doze anywhere. This can be achieved without plugins by using a HEX editor, but some people may find it more convenient.",
+        "ApplicableVersion": "any",
+        "RepoUrl": "https://github.com/Warpholomey/DozeAnywhere/",
+        "DownloadLinkInstall": "https://github.com/keagdo/DozeAnywhere/releases/download/1.0.0/latest.zip",
+        "DownloadLinkUpdate": "https://github.com/keagdo/DozeAnywhere/releases/download/1.0.0/latest.zip",
+        "Tags": [],
+        "DalamudApiLevel": 12,
+        "LoadRequiredState": 0,
+        "LoadSync": false,
+        "CanUnloadAsync": false,
+        "LoadPriority": 0,
+        "Punchline": "Sit or doze anywhere.",
+        "AcceptsFeedback": true
+    },
     {
         "Author": "Allison",
         "Name": "Eden Hall Bingo",
@@ -21,24 +40,5 @@
         "DownloadCount": -1,
         "DownloadLinkInstall": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.1.1/latest.zip",
         "DownloadLinkUpdate": "https://github.com/keagdo/EdenBingo/releases/download/v0.0.1.1/latest.zip"
-  },
-  {
-        "Author": "Warpholome", 
-        "Name": "DozeAnywhere",
-        "InternalName": "DozeAnywhere",
-        "AssemblyVersion": "1.4.0.0",
-        "Description": "Allows you to sit or doze anywhere. This can be achieved without plugins by using a HEX editor, but some people may find it more convenient.",
-        "ApplicableVersion": "any",
-        "RepoUrl": "https://github.com/Warpholomey/DozeAnywhere/",
-        "DownloadLinkInstall": "https://github.com/keagdo/DozeAnywhere/releases/download/1.0.0/latest.zip",
-        "DownloadLinkUpdate": "https://github.com/keagdo/DozeAnywhere/releases/download/1.0.0/latest.zip",
-        "Tags": [],
-        "DalamudApiLevel": 12,
-        "LoadRequiredState": 0,
-        "LoadSync": false,
-        "CanUnloadAsync": false,
-        "LoadPriority": 0,
-        "Punchline": "Sit or doze anywhere.",
-        "AcceptsFeedback": true
-    }
+  }
 ]
